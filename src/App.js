@@ -15,9 +15,9 @@ function App() {
     if (inputText !== '')
       setListTodo([...listTodo, inputText]);
   }
-  const deleteListItem = (index) => {
+  const deleteListItem = (key) => {
     let newListTodo = [...listTodo];
-    newListTodo.splice(index, 1)
+    newListTodo.splice(key, 1)
     setListTodo([...newListTodo])
   }
   const deleteAllItems = () => {
@@ -47,7 +47,7 @@ function App() {
           <div className="content">
             {listTodo.map((listItem, i) => {
               return (
-                <Todolist index={i} item={listItem} deleteItem={deleteListItem} />
+                <Todolist key={i} index={i} item={listItem} deleteItem={deleteListItem} />
               )
             })}
           </div>
