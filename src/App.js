@@ -1,25 +1,68 @@
-import logo from './logo.svg';
-import './App.css';
-
+import React, { useState, useEffect } from 'react'
+import "./App.css"
+import TodoInput from './components/TodoInput'
+import Todolist from './components/TodoList';
 function App() {
+  const getLocalList = () => {
+    let list = localStorage.getItem('lists');
+
+    if (list) {
+      return JSON.parse(localStorage.getItem('lists'));
+    }
+  }
+  const [listTodo, setListTodo] = useState(getLocalList());
+  let addList = (inputText) => {
+    if (inputText !== '')
+      setListTodo([...listTodo, inputText]);
+  }
+  const deleteListItem = (index) => {
+    let newListTodo = [...listTodo];
+    newListTodo.splice(index, 1)
+    setListTodo([...newListTodo])
+  }
+  const deleteAllItems = () => {
+    let newListTodo = [...listTodo];
+    newListTodo = []
+    setListTodo([...newListTodo])
+  }
+  // const deleteCheckedItems = () => {
+  //   let newListTodo = [...listTodo];
+  //   // {
+  //   //   listTodo.map((listItem, i) => {
+
+  //   //   })
+  //   // }
+  //   setListTodo([...newListTodo])
+  // }
+  useEffect(() => {
+    localStorage.setItem('lists', JSON.stringify(listTodo))
+  }, [listTodo])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="main-container">
+      <div className="full-container">
+        <div className="center-container">
+          <h1 className="app-heading">TO-DO-LIST</h1>
+          <TodoInput addList={addList} />
+          <div className="content">
+            {listTodo.map((listItem, i) => {
+              return (
+                <Todolist index={i} item={listItem} deleteItem={deleteListItem} />
+              )
+            })}
+          </div>
+        </div>
+        <div className="buttons">
+          <button className='clear-all' onClick={() => {
+            deleteAllItems()
+          }}> Clear All tems</button>
+          {/* <button className='clear-checked' onClick={() => {
+            deleteCheckedItems()
+          }}> Clear Completed Items</button> */}
+        </div>
+      </div>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App
